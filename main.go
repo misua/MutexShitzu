@@ -16,7 +16,6 @@ func (p *CustomServeMux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	http.NotFound(w, r)
-	return
 
 }
 
@@ -26,7 +25,16 @@ func giveRandom(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	mux := &CustomServeMux{}
-	http.ListenAndServe(":8000", mux)
+	//mux := &CustomServeMux{}
+	newMux := http.NewServeMux()
+
+	newMux.HandleFunc("/randomFloat", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintln(w, rand.Float64())
+	})
+
+	newMux.HandleFunc("/randomInt", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintln(w, rand.Intn(100))
+	})
+	http.ListenAndServe(":8000", newMux)
 
 }
